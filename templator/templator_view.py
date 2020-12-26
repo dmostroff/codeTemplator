@@ -11,5 +11,5 @@ def read_template( template_name):
 
 
 def tables_select( tables):
-    template = read_template( 'tables_select.tmplt.html')
+    template = read_template( 'base.tmplt.html')
     return template.render(tables=tables)

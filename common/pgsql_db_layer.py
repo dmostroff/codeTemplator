@@ -44,7 +44,7 @@ def get_version(conn, arg1=None, arg2=None):
     return curs.fetchone()[0]
 
 def does_table_exist(curs, table_name) -> bool:
-    curs.execute( "SELECT COUNT(name) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ?", [(table_name)])
+    curs.execute( "SELECT COUNT(name) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = %s", table_name)
     return curs.fetchone()[0] == 1
 
 @db_connector
