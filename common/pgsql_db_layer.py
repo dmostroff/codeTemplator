@@ -7,7 +7,6 @@ import sys
 import psycopg2
 from pandas import DataFrame
 import pandas.io.sql as pdsql
-import settings
 
 def db_connector( func):
     def with_connection_(*args, **kwargs):

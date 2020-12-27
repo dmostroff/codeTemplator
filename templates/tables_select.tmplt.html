@@ -1,7 +1,31 @@
-<div>
-    <select>
-    {% for table in tables %}
-        <option>{{ table.table_name }}</option>
-    {% endfor %}
-</select>
+{% extends "base.tmplt.html" %}
+{% block header %}
+<h2>Code Templator</h2>
+{% endblock %}
+{% block content %}
+<div class="mdc-layout-grid">
+    <div class="mdc-layout-grid--inner">
+        <div class="mdc-layout-grid--cell-span-4-desktop">
+            <div>
+                <select>
+                {% for table in tables %}
+                    <option>{{ table.table_name }}</option>
+                {% endfor %}
+            </select>
+            </div>
+
+        </div>
+        <div class="mdc-layout-grid__cell-span-4-desktop">
+            <button id="btnSubmit" class="mdc-button mdc-button--raised">Submit</button>
+        </div>
+    </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function() {
+    })
+    $("#btnSubmit").click( function() {
+
+        alert('yo')
+    })
+</script>
+{% endblock %}

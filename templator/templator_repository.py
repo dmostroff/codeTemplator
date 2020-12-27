@@ -8,3 +8,11 @@ WHERE table_schema = %s AND table_type = 'BASE TABLE'
     AND TABLE_NAME ~ %s
 """
     return db.fetchall(sql, [schema, prefix])
+
+def get_column_info( schema, table_name):
+    sql = """
+SELECT ORDINAL_POSITION, COLUMN_NAME, DATA_TYPE, udt_name
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE table_schema = %s AND TABLE_NAME = %s
+"""
+    return db.fetchall(sql, [schema, table_name])
