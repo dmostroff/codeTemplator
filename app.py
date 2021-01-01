@@ -30,3 +30,28 @@ def tables_by_prefix(prefix):
 @app.route('/headers/<table_name>')
 def table_headers(table_name):
     return ts.gen_headers( table_name)
+
+@app.route('/routes/<prefix>')
+def create_routes( prefix):
+    retval = ts.create_routes(prefix)
+    return retval
+
+@app.route('/service/<prefix>')
+def create_service( prefix):
+    retval = ts.create_service(prefix)
+    return retval
+
+@app.route('/repository/<prefix>')
+def create_repository( prefix):
+    retval = ts.create_repository(prefix)
+    return retval
+
+@app.route('/api_js_service/<prefix>')
+def create_api_js_service( prefix):
+    retval = ts.create_api_js_service(prefix)
+    return retval
+
+@app.route( '/vue/<prefix>')
+def create_vue_component( prefix):
+    retval = ts.create_vue_component( prefix)
+    return retval
