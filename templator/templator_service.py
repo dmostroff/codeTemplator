@@ -21,13 +21,29 @@ def create_api_js_service( prefix):
     df = tr.get_tables_and_columns_by_prefix( os.getenv('SCHEMA'), prefix)
     return th.write_api_js_service(prefix, df)
 
-def create_vue_component( prefix):
-    df = tr.get_tables_and_columns_by_prefix( os.getenv('SCHEMA'), prefix)
-    tables = th.create_tables( df)
-    fwritten = []
-    for (table) in tables:
-        fwritten.append( th.write_vue_component( prefix, table))
-    return jsonify(fwritten)
+def create_table_component( func):
+    def write_table_component_(prefix, *args, **kwargs):
+        df = tr.get_tables_and_columns_by_prefix( os.getenv('SCHEMA'), prefix)
+        tables = th.create_tables( df)
+        fwritten = [func( prefix, table) for table in tables]
+        return jsonify(fwritten)
+    return write_table_component_
+
+@create_table_component
+def create_model( prefix, table):
+    return th.write_model( prefix, table)
+
+@create_table_component
+def create_vue_table_component( prefix, table):
+    return th.write_vue_table_component( prefix, table)
+
+@create_table_component
+def create_vue_detail_component( prefix, table):
+    return th.write_vue_detail_component( prefix, table)
+
+@create_table_component
+def create_vue_form_component( prefix, table):
+    return th.write_vue_form_component( prefix, table)
 
 def get_tables_by_prefix( prefix):
     schema = os.getenv('SCHEMA')

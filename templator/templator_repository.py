@@ -21,11 +21,17 @@ WHERE table_schema = %s AND table_type = 'BASE TABLE'
 
 def get_tables_and_columns_by_prefix( schema, prefix):
     sql = """
-    SELECT t.TABLE_NAME,	string_agg(t.column_name, ',') AS COLUMN_NAMES
-    FROM INFORMATION_SCHEMA."columns" t
+WITH t AS ( 
+	SELECT ORDINAL_POSITION, TABLE_NAME, COLUMN_NAME, DATA_TYPE
+	FROM INFORMATION_SCHEMA."columns"
     WHERE table_schema = %s
         AND TABLE_NAME ~ %s
-    GROUP BY t.TABLE_NAME
+)	
+SELECT t.TABLE_NAME
+    , string_agg(t.column_name, ',') AS COLUMN_NAMES
+    , json_agg(t) AS COLUMN_DETAILS
+FROM t
+GROUP BY t.TABLE_NAME
 """
     return db.fetchall(sql, [schema, prefix])
 

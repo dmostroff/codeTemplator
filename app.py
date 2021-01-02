@@ -46,12 +46,27 @@ def create_repository( prefix):
     retval = ts.create_repository(prefix)
     return retval
 
+@app.route( '/model/<prefix>')
+def create_model( prefix):
+    retval = ts.create_models( prefix)
+    return retval
+
 @app.route('/api_js_service/<prefix>')
 def create_api_js_service( prefix):
     retval = ts.create_api_js_service(prefix)
     return retval
 
-@app.route( '/vue/<prefix>')
-def create_vue_component( prefix):
-    retval = ts.create_vue_component( prefix)
+@app.route( '/vuetable/<prefix>')
+def create_vue_table_component( prefix):
+    retval = ts.create_vue_table_component( prefix)
     return retval
+
+@app.route( '/vuedetail/<prefix>')
+def create_vue_detail_component( prefix):
+    retval = ts.create_vue_detail_component( prefix)
+    return retval
+
+@app.route( '/vueform/<prefix>')
+def create_vue_form_component( prefix):
+    retval = ts.create_vue_form_component( prefix)
+    return retval    
