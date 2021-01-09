@@ -48,7 +48,7 @@ def create_repository( prefix):
 
 @app.route( '/model/<prefix>')
 def create_model( prefix):
-    retval = ts.create_models( prefix)
+    retval = ts.create_model( prefix)
     return retval
 
 @app.route('/api_js_service/<prefix>')

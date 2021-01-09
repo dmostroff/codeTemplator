@@ -6,7 +6,8 @@ import json
 
 def write_tables_template( prefix, df_tables, template_name, file_name):
     tables = create_tables( df_tables)
-    template = render_template( template_name, tables=tables, group=prefix, group_initial=prefix[:1] )
+    group_name = prefix.capitalize()
+    template = render_template( template_name, tables=tables, group=prefix, group_name=group_name, group_initial=prefix[:1] )
     full_name = os.path.join( os.getenv('TARGET_DIR'), file_name)
     fh.write_file( full_name, template)
     return full_name
@@ -30,6 +31,30 @@ def makeLabelName( name):
 def makeLabels( column_names):
     return [ makeLabelName( column) for column in column_names.split(',')]
 
+dataTypeMapping = {
+	"xid": 'str',
+	"name": 'str',
+	"bytea": 'bytea',
+	"character": 'str',
+	"date": 'datetime',
+	"double precision": 'float',
+	"real": 'float',
+	"character varying": 'str',
+	"bigint": 'int',
+	"smallint": 'int',
+	"boolean": 'bool',
+	"integer": 'int',
+	"ARRAY": 'List[str]',
+	"oid": 'str',
+	"numeric": 'int',
+	"text": 'str',
+    'timestamp with time zone': 'datetime',
+    'jsonb': 'str'
+}
+def makeColDetails( column_details):
+    for col in column_details:
+        col['pydantic_type'] = dataTypeMapping[col['data_type']] if col['data_type'] in dataTypeMapping else col['data_type']
+    return column_details
 
 def create_tables( df_tables):
     table_dict = df_tables.to_dict('records')
@@ -40,7 +65,7 @@ def create_tables( df_tables):
             , 'object': makeObjectName( row['table_name']) \
             , 'columns': row['column_names'].split(',') \
             , 'labels': makeLabels( row['column_names']) \
-            , 'column_details': json.loads(str(row['column_details'])) \
+            , 'column_details': makeColDetails(row['column_details']) \
             } for row in table_dict \
     ]
     return tables
@@ -51,7 +76,7 @@ def save_render( target_dir, table_name, ext, data):
     return full_name
 
 def write_routes(prefix, df_tables):
-    return write_tables_template( prefix, df_tables, 'routes.tmplt.py', 'app.py')
+    return write_tables_template( prefix, df_tables, 'routes.tmplt.py', 'main.py')
 
 def write_repository(prefix, df_tables):
     filename = '{0}_repository.py'.format(prefix)
@@ -66,7 +91,7 @@ def write_api_js_service(prefix, df_tables):
     return write_tables_template( prefix, df_tables, 'group_api_service.tmplt.js', filename)
 
 def write_model(prefix, table_dict):
-    return write_table_template( prefix, table_dict, table_dict['class']+'.py', 'model.tmplt.vue')
+    return write_table_template( prefix, table_dict, table_dict['class']+'.py', 'model.tmplt.py')
 
 def write_vue_table_component(prefix, table_dict):
     return write_table_template( prefix, table_dict, table_dict['class']+'.vue', 'vue_table_component.tmplt.vue')

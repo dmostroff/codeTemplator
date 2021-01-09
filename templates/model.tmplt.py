@@ -3,8 +3,5 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 class {{ table.class}}(BaseModel):
-    {% for col in table.columns %}{{col}}: {{ table.datatypes[loop.index-1]}}
-    {% endfor %}
-
-    {% for col in table.columns %}{{col}}: {{ table.datatypes[loop.index-1]}}
+    {% for col in table.column_details %}{{col['column_name']}}: {{ col['pydantic_type']}}
     {% endfor %}

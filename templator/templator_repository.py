@@ -22,10 +22,16 @@ WHERE table_schema = %s AND table_type = 'BASE TABLE'
 def get_tables_and_columns_by_prefix( schema, prefix):
     sql = """
 WITH t AS ( 
-	SELECT ORDINAL_POSITION, TABLE_NAME, COLUMN_NAME, DATA_TYPE
-	FROM INFORMATION_SCHEMA."columns"
-    WHERE table_schema = %s
-        AND TABLE_NAME ~ %s
+	SELECT c.ORDINAL_POSITION, c.TABLE_NAME, c.COLUMN_NAME, c.DATA_TYPE, COALESCE(kcu.CONSTRAINT_NAME,'') AS CONSTRAINT_NAME
+	FROM INFORMATION_SCHEMA.COLUMNS c
+		LEFT OUTER JOIN INFORMATION_SCHEMA.key_column_usage kcu
+			ON kcu.TABLE_CATALOG = c.TABLE_CATALOG 
+                AND kcu.TABLE_SCHEMA = c.TABLE_SCHEMA 
+                AND kcu.TABLE_NAME = c.TABLE_NAME 
+                AND kcu.COLUMN_NAME = c.COLUMN_NAME 
+                AND CONSTRAINT_NAME ~ 'pkey'
+    WHERE c.table_schema = %s
+        AND c.TABLE_NAME ~ %s
 )	
 SELECT t.TABLE_NAME
     , string_agg(t.column_name, ',') AS COLUMN_NAMES
