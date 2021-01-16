@@ -3,7 +3,7 @@ import cs from '@/services/common_service'
 
 export default {
     {% for table in tables %}
-    async get{{ table.class }}()
+    async get{{ table.class }}() {
         let resp = await api.getHttpRequest('/{{group}}/{{table.name}}');
         return cs.requestResponse( resp);
     },

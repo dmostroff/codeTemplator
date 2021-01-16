@@ -19,7 +19,7 @@ def hello_world():
     return 'Hello, World!'
 
 @app.route('/hello')
-def hell():
+def hello():
     return render_template('hello.tmplt.html')
 
 @app.route('/tables/<prefix>')
