@@ -11,7 +11,7 @@
     </div>
     <v-dialog v-model="dialogDetail">
       <{{table.class}}Detail
-        :{{table.object}Id="{{table.object}}Id"
+        :{{table.object}}Id="{{table.object}}Id"
         @editClientPersonForm="edit{{table.class}}Form"
         @cancel{{table.class}}Detail="cancel{{table.class}}Detail"
       ></{{table.class}}Detail>

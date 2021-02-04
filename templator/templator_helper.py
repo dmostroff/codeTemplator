@@ -78,6 +78,9 @@ def save_render( target_dir, table_name, ext, data):
 def write_routes(prefix, df_tables):
     return write_tables_template( prefix, df_tables, 'routes.tmplt.py', 'main.py')
 
+def write_resource(prefix, table_dict):
+    return write_table_template( prefix, table_dict, table_dict['class'].lower()+'_resource.py', 'resource.tmplt.py')
+
 def write_repository(prefix, df_tables):
     filename = '{0}_repository.py'.format(prefix)
     return write_tables_template( prefix, df_tables, 'repository.tmplt.py', filename)
@@ -91,7 +94,7 @@ def write_api_js_service(prefix, df_tables):
     return write_tables_template( prefix, df_tables, 'group_api_service.tmplt.js', filename)
 
 def write_model(prefix, table_dict):
-    return write_table_template( prefix, table_dict, table_dict['class']+'.py', 'model.tmplt.py')
+    return write_table_template( prefix, table_dict, table_dict['class']+'Model.py', 'model.tmplt.py')
 
 def write_vue_table_component(prefix, table_dict):
     return write_table_template( prefix, table_dict, table_dict['class']+'.vue', 'vue_table_component.tmplt.vue')

@@ -16,7 +16,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
-    return 'Hello, World!'
+    return 'Hello, Code Templator!'
 
 @app.route('/hello')
 def hello():
@@ -35,6 +35,10 @@ def table_headers(table_name):
 def create_routes( prefix):
     retval = ts.create_routes(prefix)
     return retval
+
+@app.route('/resource/<prefix>')
+def create_resource( prefix):
+    return ts.create_resource(prefix)
 
 @app.route('/service/<prefix>')
 def create_service( prefix):

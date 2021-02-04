@@ -3,15 +3,16 @@ import cs from '@/services/common_service'
 
 export default {
     {% for table in tables %}
+    /* {{ table.name}} */
     async get{{ table.class }}() {
-        let resp = await api.getHttpRequest('/{{group}}/{{table.name}}');
+        let resp = await api.getHttpRequest('/{{group}}/{{table.name}}s');
         return cs.requestResponse( resp);
     },
 
-    async get{{ table.class }}By{{group_name}}Id( {{group}}_id) {
-        let resp = await api.getHttpRequest('/{{group}}/'+{{group}}_id+'{{table.name}}');
-        return cs.requestResponse( resp);
-    },
+    // async get{{ table.class }}By{{group_name}}Id( {{group}}_id) {
+    //     let resp = await api.getHttpRequest('/{{group}}/'+{{group}}_id+'{{table.name}}');
+    //     return cs.requestResponse( resp);
+    // },
 
     async get{{ table.class }}ById( id) {
         let resp = await api.getHttpRequest('/{{group}}/{{table.name}}/'+id);

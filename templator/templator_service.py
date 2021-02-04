@@ -30,6 +30,10 @@ def create_table_component( func):
     return write_table_component_
 
 @create_table_component
+def create_resource( prefix, table):
+    return th.write_resource(prefix, table)
+
+@create_table_component
 def create_model( prefix, table):
     return th.write_model( prefix, table)
 

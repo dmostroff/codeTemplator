@@ -4,32 +4,34 @@ import pgsql_db_layer as db
 #######################
 # {{ table.name}}
 #######################
-import {{table.class}}
+import {{table.class}}Model
 
-def get_{{table.name}}():
+def get_{{table.name}}_basesql():
     sql = """
     SELECT {{','.join(table.columns)}}
     FROM {{table.name}}
 """
+    return sql
+
+def get_{{table.name}}s():
+    sql = get_{{table.name}}_basesql()
     return db.fetchall(sql)
 
 def get_{{table.name}}_by_id(id):
-    sql = """
-    SELECT {{ ','.join(table.columns)}}
-    FROM {{table.name}}
+    sql = get_{{table.name}}_basesql()
+    sql += """
     WHERE {% for col in table.column_details %}{% if col.constraint_name > '' %}{% if loop.index > 1 %} AND{% endif %}{{ col.column_name}} = %s{% endif %}{% endfor %}
 """
     return db.fetchall(sql, [id])
 
-def get_{{table.name}}_by_{{group}}_id({{group}}_id):
-    sql = """
-    SELECT {{ ','.join(table.columns)}}
-    FROM {{table.name}}
-    WHERE {{group}}_id = %s
-"""
-    return db.fetchall(sql, [{{group}}_id])
+# def get_{{table.name}}_by_{{group}}_id({{group}}_id):
+#     sql = get_{{table.name}}_basesql()
+#     sql += """
+#     WHERE {{group}}_id = %s
+# """
+#     return db.fetchall(sql, [{{group}}_id])
 
-def upsert_{{table.name}}( {{table.name}}:{{table.class}}):
+def upsert_{{table.name}}( {{table.name}}:{{table.class}}Model):
     sql = """
     WITH t AS (
         SELECT {% for col in table.columns %}
@@ -59,32 +61,32 @@ def upsert_{{table.name}}( {{table.name}}:{{table.class}}):
     ;
 """
     val = [{% for col in table.columns %}
-            {% if loop.index > 1 %}, {% endif %}{{table.class}}.{{ col }}{% endfor %}
+            {% if loop.index > 1 %}, {% endif %}{{table.name}}.{{ col }}{% endfor %}
         ]
     return db.execute(sql, val)
 
-def insert_{{table.name}}( {{table.name}}:{{table.class}}):
+def insert_{{table.name}}( {{table.name}}:{{table.class}}Model):
     sql = """
     INSERT INTO {{table.name}}( {{ ','.join(table.columns[1:])}})
     VALUES ({% for col in table.columns[1:] %}{% if loop.index > 1 %}, {% endif %}%s{% endfor %})
     ;
 """
     val = [{% for col in table.column_details %}
-            {% if col.constraint_name == '' %}{% if loop.index > 2 %}, {% endif %}{{table.class}}.{{ col.column_name}}{% endif %}{% endfor %}
+            {% if col.constraint_name == '' %}{% if loop.index > 2 %}, {% endif %}{{table.name}}.{{ col.column_name}}{% endif %}{% endfor %}
         ]
     return db.execute(sql, val)
 
 # this has a flaw in loop.index > 2
-def update_{{table.name}}( {{table.name}}:{{table.class}}):
+def update_{{table.name}}( {{table.name}}:{{table.class}}Model):
     sql = """
     UPDATE {{table.name}}
     SET {% for col in table.column_details %}{% if col.constraint_name == '' %}{% if loop.index > 2 %}, {% endif %}{{ col.column_name}} = %s{% endif %}{% endfor %}
     WHERE {% for col in table.column_details %}{% if col.constraint_name > '' %}{% if loop.index > 1 %} AND{% endif %}{{ col.column_name}} = %s{% endif %}{% endfor %}
 """
     val = [{% for col in table.column_details %}{% if col.constraint_name == '' %}{% if loop.index > 2 %}
-            , {% endif %}{{table.class}}.{{ col.column_name}}{% endif %}{% endfor %}
+            , {% endif %}{{table.name}}.{{ col.column_name}}{% endif %}{% endfor %}
         {% for col in table.column_details %}
-            {% if col.constraint_name > '' %}, {{table.class}}.{{ col.column_name}}{% endif %}{% endfor %}            
+            {% if col.constraint_name > '' %}, {{table.name}}.{{ col.column_name}}{% endif %}{% endfor %}            
         ]
     return db.execute(sql, val)
 {% endfor %}
