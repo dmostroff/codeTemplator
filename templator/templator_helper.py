@@ -54,6 +54,8 @@ dataTypeMapping = {
 def makeColDetails( column_details):
     for col in column_details:
         col['pydantic_type'] = dataTypeMapping[col['data_type']] if col['data_type'] in dataTypeMapping else col['data_type']
+        if col['is_nullable'] == 'YES':
+            col['pydantic_type'] = f"Optional[{col['pydantic_type']}] = None"
     return column_details
 
 def create_tables( df_tables):
